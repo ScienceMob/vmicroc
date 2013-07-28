@@ -58,6 +58,7 @@ body {
 /* Carousel base class */
 .carousel {
   margin-bottom: 60px;
+  margin-top: 45px;
 }
 
 .carousel .container {
@@ -119,6 +120,9 @@ body {
 .marketing .span4 p {
   margin-left: 10px;
   margin-right: 10px;
+}
+.marketing .spanfull p {
+  margin: 10px;
 }
 
 
