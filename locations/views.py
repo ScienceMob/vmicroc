@@ -11,6 +11,9 @@ from locations.models import Location
 from data.models import Datum, DaySummary
 
 
+ACST = pytz.timezone('Australia/Adelaide')
+
+
 def inspector(request, base_template='normal.html'):
     return render(request, 'locations/inspector.html', {
             'base_template': base_template,
@@ -27,7 +30,7 @@ def detail_data(request, location_id):
     # Extract the timestamp from the raw data request, and convert it
     # into a time in the local timezone.
     try:
-        timestamp = timezone.localtime(datetime.fromtimestamp(int(request.GET['timestamp']) / 1000).replace(tzinfo=pytz.UTC))
+        timestamp = timezone.localtime(datetime.fromtimestamp(int(request.GET['timestamp']) / 1000).replace(tzinfo=ACST))
     except KeyError:
         raise Http404
 
@@ -61,7 +64,7 @@ def detail_data(request, location_id):
             # the compiled row of data
             if row is not None:
                 writer.writerow(
-                    [current_timestamp.strftime('%Y%m%d %H:%M:%s')] +
+                    [timezone.localtime(current_timestamp).strftime('%Y/%m/%d %H:%M:%S')] +
                     [val for (key, val) in sorted(row.items())]
                 )
 
@@ -81,7 +84,7 @@ def detail_data(request, location_id):
     # in the row, record it as the last timestamp.
     if current_timestamp and any(row.values()):
         writer.writerow(
-            [current_timestamp.strftime('%Y%m%d %H:%M:%s')] +
+            [current_timestamp.strftime('%Y/%m/%d %H:%M:%S')] +
             [val for (key, val) in sorted(row.items())]
         )
 
@@ -131,7 +134,7 @@ def summary_data(request, location_id):
             # the compiled row of data
             if row is not None:
                 writer.writerow(
-                    [current_day.strftime('%Y%m%d')] +
+                    [current_day.strftime('%Y/%m/%d')] +
                     ['%s;%s;%s' % val for (key, val) in sorted(row.items())]
                 )
 
@@ -142,7 +145,7 @@ def summary_data(request, location_id):
             )
 
             # Record the new current timestamp
-            current_day = summary.timestamp
+            current_day = summary.day
 
         # Add this sensor's reading to the row.
         row[summary.sensor.position] = (summary.minimum, summary.average, summary.maximum)
@@ -151,7 +154,7 @@ def summary_data(request, location_id):
     # in the row, record it as the last timestamp.
     if current_day and any(row.values()):
         writer.writerow(
-            [current_day.strftime('%Y%m%d')] +
+            [current_day.strftime('%Y/%m/%d')] +
             ['%s;%s;%s' % val for (key, val) in sorted(row.items())]
         )
 

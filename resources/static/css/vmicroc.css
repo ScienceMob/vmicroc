@@ -173,6 +173,11 @@ body {
   height: 300px;
 }
 
+.controls label {
+  padding: 10px;
+  display: inline;
+}
+
 
 /* RESPONSIVE CSS
 -------------------------------------------------- */
