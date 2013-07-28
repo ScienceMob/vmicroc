@@ -10,6 +10,10 @@ admin.autodiscover()
 urlpatterns = patterns('',
     url(r'^$', 'vmicroc.views.home', name='home'),
 
+    # The page for inspecting results.
+    url(r'^inspector/$', 'locations.views.inspector', name='inspector'),
+    url(r'^inspector/iframe/$', 'locations.views.inspector', {'base_template': 'simple.html'}, name='inspector-iframe'),
+
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
