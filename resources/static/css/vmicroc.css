@@ -121,6 +121,9 @@ body {
   margin-left: 10px;
   margin-right: 10px;
 }
+.marketing .spanfull p {
+  margin: 10px;
+}
 
 
 /* Featurettes
