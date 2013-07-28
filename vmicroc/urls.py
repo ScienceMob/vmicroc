@@ -14,6 +14,9 @@ urlpatterns = patterns('',
     url(r'^inspector/$', 'locations.views.inspector', name='inspector'),
     url(r'^inspector/iframe/$', 'locations.views.inspector', {'base_template': 'simple.html'}, name='inspector-iframe'),
 
+    url(r'^location/(?P<location_id>\w+)/summary/$', 'locations.views.summary_data', name='summary_data'),
+    url(r'^location/(?P<location_id>\w+)/detail/$', 'locations.views.detail_data', name='detail_data'),
+
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 

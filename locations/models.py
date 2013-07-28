@@ -21,7 +21,7 @@ class Sensor(models.Model):
         (120, '1.2m'),
         (180, '1.8m'),
     ]
-    location = models.ForeignKey(Location)
+    location = models.ForeignKey(Location, related_name='sensors')
     position = models.IntegerField(choices=POSITION_CHOICES)
 
     sensor_id = models.CharField(max_length=20, db_index=True)
