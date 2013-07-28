@@ -27,5 +27,8 @@ class DaySummary(models.Model):
     average = models.FloatField(null=True)
     maximum = models.FloatField(null=True)
 
+    class Meta:
+        verbose_name_plural = 'day summaries'
+
     def __unicode__(self):
         return '%s @ %s' % (self.sensor, self.day)

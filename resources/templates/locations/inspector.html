@@ -33,6 +33,9 @@ function render_detail(location_id, timestamp) {
   $('#chart-detail-canvas').hide();
   $.ajax({
     url: '/location/' + location_id + '/detail/',
+    data: {
+      timestamp: timestamp
+    },
     cache: false,
     success: function(data) {
       $('#detail-message').hide();
@@ -41,7 +44,7 @@ function render_detail(location_id, timestamp) {
         document.getElementById("chart-detail-canvas"),
         data,
         {
-          title: 'Daily Temperatures - Detailed data, ' + timestamp,
+          title: 'Observed temperatures: ' + new Date(timestamp).toDateString(),
           ylabel: 'Temperature (C)',
           legend: 'always',
           labelsDivStyles: {
