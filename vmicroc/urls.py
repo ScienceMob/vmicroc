@@ -9,6 +9,8 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$', 'vmicroc.views.home', name='home'),
+    url(r'^about/$', 'vmicroc.views.about', name='about'),
+    url(r'^contact/$', 'vmicroc.views.contact', name='contact'),
 
     # The page for inspecting results.
     url(r'^inspector/$', 'locations.views.inspector', name='inspector'),

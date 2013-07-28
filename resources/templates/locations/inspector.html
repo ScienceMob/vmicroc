@@ -1,4 +1,5 @@
 {% extends base_template %}
+{% block inspector-active %} class="active"{% endblock %}
 {% block extra_head %}
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
 <script src="http://dygraphs.com/dygraph-combined.js"></script>
@@ -40,7 +41,6 @@ function render_detail(location_id, timestamp) {
         document.getElementById("chart-detail-canvas"),
         data,
         {
-          customBars: true,
           title: 'Daily Temperatures - Detailed data, ' + timestamp,
           ylabel: 'Temperature (C)',
           legend: 'always',

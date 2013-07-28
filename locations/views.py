@@ -31,7 +31,7 @@ def detail_data(request, location_id):
         writer.writerow(
             [(datetime(2009, 1, 1) + timedelta(i)).strftime('%Y%m%d')] +
             [
-                '%s;%s;%s' % (sensor.position - 10, sensor.position, sensor.position + 10)
+                sensor.position
                 for sensor in location.sensors.order_by('position')
             ]
         )
