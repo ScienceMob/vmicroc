@@ -18,7 +18,7 @@ body {
   right: 0;
   z-index: 10;
   margin-top: 20px;
-  margin-bottom: -90px; /* Negative margin to pull up carousel. 90px is roughly margins and height of navbar. */
+  margin-bottom: 0px; /* Negative margin to pull up carousel. 90px is roughly margins and height of navbar. */
 }
 .navbar-wrapper .navbar {
 
@@ -76,14 +76,14 @@ body {
 }
 
 .carousel .item {
-  height: 500px;
+  height: 250px;
 }
 .carousel img {
   position: absolute;
   top: 0;
   left: 0;
   max-width: inherit;
-  height: 500px;
+  height: 250px;
 }
 
 .carousel-caption {
@@ -185,11 +185,11 @@ body {
   }
 
   .carousel .item {
-    height: 500px;
+    height: 250px;
   }
   .carousel img {
     width: auto;
-    height: 500px;
+    height: 250px;
   }
 
   .featurette {
