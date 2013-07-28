@@ -80,7 +80,7 @@ body {
 }
 .carousel img {
   position: absolute;
-  top: 0;
+  top: 90px;
   left: 0;
   max-width: inherit;
   height: 250px;
