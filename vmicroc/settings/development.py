@@ -1,4 +1,5 @@
 from vmicroc.settings.common import *
+from vmicroc.settings.secrets import *
 
 import os
 

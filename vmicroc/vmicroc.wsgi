@@ -14,6 +14,10 @@ framework.
 
 """
 import os
+import site
+
+site.addsitedir('/home/vmicroc/live/lib/python2.7/site-packages')
+site.addsitedir('/home/vmicroc/live/www')
 
 # We defer to a DJANGO_SETTINGS_MODULE already in the environment. This breaks
 # if running multiple sites in the same mod_wsgi process. To fix this, use
