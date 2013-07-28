@@ -60,15 +60,19 @@ function render_location_callback(location_name, location_id) {
   var render_location = function() {
     $('#location-instruction').hide();
     $('#location-name').text(location_name);
-    $('#location-message').text('Loading...');
+    $('#location-message').text('Loading...').show();
     $('#location-detail').show();
+    $('#chart-summary-canvas').hide();
+    $('#detail-message').hide();
+    $('#chart-detail-canvas').hide();
 
     $.ajax({
       url: '/location/' + location_id + '/summary/',
       cache: false,
       success: function(data) {
         $('#location-message').hide();
-        $('#detail-message').text('Click on the chart to view detailed data for that date');
+        $('#chart-summary-canvas').show();
+        $('#detail-message').text('Click on the chart to view detailed data for that date').show();
 
         summaryChart = new Dygraph(
           document.getElementById("chart-summary-canvas"),
