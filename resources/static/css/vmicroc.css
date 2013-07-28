@@ -58,6 +58,7 @@ body {
 /* Carousel base class */
 .carousel {
   margin-bottom: 60px;
+  margin-top: 90px;
 }
 
 .carousel .container {
