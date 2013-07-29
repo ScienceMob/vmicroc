@@ -22,6 +22,7 @@ urlpatterns = patterns('',
 
     # The page for uploading new data
     url(r'^upload/$', 'data.views.upload', name='data_upload'),
+    url(r'^enqueue/(?P<import_task_id>\w+)$', 'data.views.enqueue', name='importtask_enqueue'),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

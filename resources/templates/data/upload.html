@@ -6,7 +6,7 @@
     {% endfor %}
     <form enctype="multipart/form-data" method="post" action="{% url 'data_upload' %}">
         {% csrf_token %}
-        {{ upload_form.as_p }}
+        {{ import_task_form.as_p }}
         <input type="submit" value="Upload file">
     </form>
 </div>
