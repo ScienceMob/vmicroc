@@ -4,7 +4,7 @@ from data.models import Datum, DaySummary
 
 
 class DatumAdmin(admin.ModelAdmin):
-    list_display = ('location', 'sensor', 'timestamp', 'temperature')
+    list_display = ('location', 'sensor', 'timestamp', 'raw_temperature', 'temperature')
     list_filter = ('location',)
 
 

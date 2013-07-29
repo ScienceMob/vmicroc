@@ -1,0 +1,13 @@
+{% extends "normal.html" %}
+{% block content %}
+<div class="container">
+    {% for message in messages %}
+    <div class="alert {% if message.level == 20 %}alert-info{% elif message.level == 25 %}alert-success{% elif message.level == 40 %}alert-error{% endif %}">{{ message }}</div>
+    {% endfor %}
+    <form enctype="multipart/form-data" method="post" action="{% url 'data_upload' %}">
+        {% csrf_token %}
+        {{ upload_form.as_p }}
+        <input type="submit" value="Upload file">
+    </form>
+</div>
+{% endblock %}

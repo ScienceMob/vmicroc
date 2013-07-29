@@ -20,6 +20,9 @@ urlpatterns = patterns('',
     url(r'^location/(?P<location_id>\w+)/detail/$', 'locations.views.detail_data', name='detail_data'),
     url(r'^location/(?P<location_id>\w+)/export/$', 'locations.views.export_data', name='export_data'),
 
+    # The page for uploading new data
+    url(r'^upload/$', 'data.views.upload', name='data_upload'),
+
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 

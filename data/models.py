@@ -8,7 +8,8 @@ class Datum(models.Model):
     sensor = models.ForeignKey(Sensor)
 
     timestamp = models.DateTimeField(db_index=True)
-    temperature = models.FloatField(null=True)
+    raw_temperature = models.FloatField()
+    temperature = models.FloatField('Calibrated temperature')
 
     class Meta:
         verbose_name_plural = 'data'
@@ -23,9 +24,9 @@ class DaySummary(models.Model):
 
     day = models.DateField(db_index=True)
 
-    minimum = models.FloatField(null=True)
-    average = models.FloatField(null=True)
-    maximum = models.FloatField(null=True)
+    minimum = models.FloatField()
+    average = models.FloatField()
+    maximum = models.FloatField()
 
     class Meta:
         verbose_name_plural = 'day summaries'
