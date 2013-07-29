@@ -15,11 +15,10 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="brand" href="#">VmicroC</a>
+            <a class="{% block home-active %}{% endblock %}brand" href="{% url 'home' %}">VmicroC</a>
             <!-- Responsive Navbar Part 2: Place all navbar contents you want collapsed withing .navbar-collapse.collapse. -->
             <div class="nav-collapse collapse">
               <ul class="nav">
-                <li{% block home-active %}{% endblock %}><a href="{% url 'home' %}">Home</a></li>
 				        <li{% block inspector-active %}{% endblock %}><a href="{% url 'inspector' %}">Inspector</a><li>
                 <li{% block about-active %}{% endblock %}><a href="{% url 'about' %}">About</a></li>
                 <li{% block contact-active %}{% endblock %}><a href="{% url 'contact' %}">Contact</a></li>
