@@ -178,6 +178,11 @@ body {
   display: inline;
 }
 
+.title .export  {
+  margin-top: 15px;
+  display: none;
+}
+
 
 /* RESPONSIVE CSS
 -------------------------------------------------- */

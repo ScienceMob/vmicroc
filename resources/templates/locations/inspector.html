@@ -12,7 +12,12 @@
             <h2>Select your site</h2>
         </div>
         <div class="span8" id="location-detail">
-            <h2 id="location-name"></h2>
+            <div class="row title">
+              <h2 class="span6" id="location-name"></h2>
+              <div class="span2 export">
+                <a class="btn" href="" id="location-export"></a>
+              </div>
+            </div>
             <h3 id="location-message"></h3>
             <div id="chart-controls" class="controls">
               <input id="0" type="checkbox" checked><label for"0">-0.2m</label>
@@ -82,6 +87,9 @@ function render_location_callback(location_name, location_id) {
   var render_location = function() {
     $('#location-instruction').hide();
     $('#location-name').text(location_name);
+    $('#location-export').parent().show();
+    $('#location-export').text('Download as CSV');
+    $('#location-export').attr('href', '/location/' + location_id + '/export');
     $('#location-message').text('Loading...').show();
     $('#location-detail').show();
     $('#chart-summary-canvas').hide();

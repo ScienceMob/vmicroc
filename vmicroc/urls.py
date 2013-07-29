@@ -18,6 +18,7 @@ urlpatterns = patterns('',
 
     url(r'^location/(?P<location_id>\w+)/summary/$', 'locations.views.summary_data', name='summary_data'),
     url(r'^location/(?P<location_id>\w+)/detail/$', 'locations.views.detail_data', name='detail_data'),
+    url(r'^location/(?P<location_id>\w+)/export/$', 'locations.views.export_data', name='export_data'),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

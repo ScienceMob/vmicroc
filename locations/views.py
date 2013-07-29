@@ -1,5 +1,5 @@
 import csv
-from datetime import datetime, timedelta
+from datetime import datetime
 from StringIO import StringIO
 import pytz
 
@@ -52,7 +52,7 @@ def detail_data(request, location_id):
 
     # Write header block
     sensors = location.sensors.order_by('position')
-    writer.writerow(['Data'] + [sensor.get_position_display() for sensor in sensors])
+    writer.writerow(['Timestamp'] + [sensor.get_position_display() for sensor in sensors])
 
     current_timestamp = None
     row = None
@@ -88,15 +88,6 @@ def detail_data(request, location_id):
             [val for (key, val) in sorted(row.items())]
         )
 
-    # for i in range(1000):
-    #     writer.writerow(
-    #         [(datetime(2009, 1, 1) + timedelta(i)).strftime('%Y%m%d')] +
-    #         [
-    #             sensor.position
-    #             for sensor in location.sensors.order_by('position')
-    #         ]
-    #     )
-
     return HttpResponse(output.getvalue(), content_type='text/csv')
 
 
@@ -122,7 +113,7 @@ def summary_data(request, location_id):
 
     # Write header block
     sensors = location.sensors.order_by('position')
-    writer.writerow(['Data'] + [sensor.get_position_display() for sensor in sensors])
+    writer.writerow(['Day'] + [sensor.get_position_display() for sensor in sensors])
 
     current_day = None
     row = None
@@ -158,13 +149,68 @@ def summary_data(request, location_id):
             ['%s;%s;%s' % val for (key, val) in sorted(row.items())]
         )
 
-    # for i in range(1000):
-    #     writer.writerow(
-    #         [(datetime(2009, 1, 1) + timedelta(i)).strftime('%Y%m%d')] +
-    #         [
-    #             '%s;%s;%s' % (sensor.position - 10, sensor.position, sensor.position + 10)
-    #             for sensor in location.sensors.order_by('position')
-    #         ]
-    #     )
-
     return HttpResponse(output.getvalue(), content_type='text/csv')
+
+
+def export_data(request, location_id):
+    try:
+        location = Location.objects.get(pk=location_id)
+    except Location.DoesNotExist:
+        raise Http404
+
+    # Get all data that falls on the same day at the same location.
+    raw_data = Datum.objects.filter(
+        location=location,
+        ).select_related(
+            "sensor__position"
+        ).order_by(
+            'timestamp', 'sensor'
+        )
+
+    output = StringIO()
+    writer = csv.writer(output)
+
+    # Write header block
+    sensors = location.sensors.order_by('position')
+    writer.writerow(['Timestamp'] + [sensor.get_position_display() for sensor in sensors])
+
+    current_timestamp = None
+    row = None
+    for datum in raw_data:
+        # If this is the first row, or the first row of a new timestamp,
+        # fill out a dummy row of data.
+        if row is None or current_timestamp != datum.timestamp:
+            # A new timestamp has been found, so output
+            # the compiled row of data
+            if row is not None:
+                writer.writerow(
+                    [timezone.localtime(current_timestamp).strftime('%Y/%m/%d %H:%M:%S')] +
+                    [val for (key, val) in sorted(row.items())]
+                )
+
+            # Set up a new empty row
+            row = dict(
+                (sensor.position, None)
+                for sensor in sensors
+            )
+
+            # Record the new current timestamp
+            current_timestamp = datum.timestamp
+
+        # Add this sensor's reading to the row.
+        row[datum.sensor.position] = datum.temperature
+
+    # We've got no more data to process; if there's anything stored
+    # in the row, record it as the last timestamp.
+    if current_timestamp and any(row.values()):
+        writer.writerow(
+            [current_timestamp.strftime('%Y/%m/%d %H:%M:%S')] +
+            [val for (key, val) in sorted(row.items())]
+        )
+
+    response = HttpResponse(output.getvalue(), content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename=vmicroc.%s.%s.csv' % (
+        location.name,
+        timezone.localtime(timezone.now()).strftime('%Y_%m_%d-%H_%M')
+    )
+    return response
