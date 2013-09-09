@@ -45,10 +45,11 @@ def import_data_file(import_task_id):
                     if len(parts) != 3:
                         errors.append('Line %s: Invalid data format' % (n + 1))
                     else:
-                        timestamp, sensor_id, raw_reading = parts
+                        datestr, timestr, sensor_id, raw_reading = parts
                         try:
                             sensor = sensors[sensor_id]
-                            timestamp = datetime.fromtimestamp(int(timestamp) + EPOCH).replace(tzinfo=ACST)
+                            timestamp = datetime.strptime(','.join([datestr, timestr]), '%m/%d/%Y,%H:%M:%S')
+                            datetime.datetime(timestamp[:6]).replace(tzinfo=ACST)
                             if timestamp < (timezone.now() - timedelta(days=730)):
                                 raise RTCFailure('File contains timestamps that are > 2 years old; possible RTC failure')
                             observed_dates.add(timestamp.date())
