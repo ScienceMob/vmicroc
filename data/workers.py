@@ -1,5 +1,5 @@
 import csv
-from datetime import datetime, timedelta, strptime
+from datetime import datetime, timedelta
 import os
 import pytz
 import time
@@ -48,7 +48,7 @@ def import_data_file(import_task_id):
                         datestr, timestr, sensor_id, raw_reading = parts
                         try:
                             sensor = sensors[sensor_id]
-                            timedata = strptime(','.join([datestr, timestr]), '%m/%d/%Y,%H:%M:%S')
+                            timedata = datetime.strptime(','.join([datestr, timestr]), '%m/%d/%Y,%H:%M:%S')
                             timestamp = datetime(timedata[:6]).replace(tzinfo=ACST)
                             if timestamp < (timezone.now() - timedelta(days=730)):
                                 raise RTCFailure('File contains timestamps that are > 2 years old; possible RTC failure')
