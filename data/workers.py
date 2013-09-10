@@ -42,8 +42,8 @@ def import_data_file(import_task_id):
             try:
                 reader = csv.reader(data_file)
                 for n, parts in enumerate(reader):
-                    if len(parts) != 3:
-                        errors.append('Line %s: Invalid data format' % (n + 1))
+                    if len(parts) != 4:
+                        errors.append('Line %s: Invalid number of data items' % (n + 1))
                     else:
                         datestr, timestr, sensor_id, raw_reading = parts
                         try:
