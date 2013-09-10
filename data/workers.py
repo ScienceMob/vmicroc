@@ -48,8 +48,8 @@ def import_data_file(import_task_id):
                         datestr, timestr, sensor_id, raw_reading = parts
                         try:
                             sensor = sensors[sensor_id]
-                            timedata = datetime.strptime(','.join([datestr, timestr]), '%m/%d/%Y,%H:%M:%S')
-                            timestamp = datetime(timedata[:6]).replace(tzinfo=ACST)
+                            timestamp = datetime.strptime(','.join([datestr, timestr]), '%m/%d/%Y,%H:%M:%S')
+                            timestamp = timestamp.replace(tzinfo=ACST)
                             if timestamp < (timezone.now() - timedelta(days=730)):
                                 raise RTCFailure('File contains timestamps that are > 2 years old; possible RTC failure')
                             observed_dates.add(timestamp.date())
@@ -79,7 +79,7 @@ def import_data_file(import_task_id):
                         except KeyError:
                             unknown_sensor_ids.add(sensor_id)
                         except TypeError, e:
-                            errors.append("Line %s: Invalid timestamp '%s'" % (n + 1, timestamp))
+                            errors.append("Line %s: Invalid timestamp '%s %s'" % (n + 1, datestr, timestr))
                         except ValueError:
                             errors.append("Line %s: Invalid temperature reading '%s'" % (n + 1, raw_reading))
             except RTCFailure, e:
@@ -155,6 +155,8 @@ def import_data_file(import_task_id):
 
     except Exception, e:
         # Catch all... in case something goes wrong.
+        import traceback
+        traceback.print_exc()
         import_task.status = ImportTask.ATTENTION_REQUIRED
         import_task.messages.create(level=ImportMessage.ERROR, message=str(e))
 
