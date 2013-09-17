@@ -31,7 +31,7 @@ class ImportMessageInline(admin.TabularInline):
 
 
 class ImportTaskAdmin(admin.ModelAdmin):
-    list_display = ('location', 'status')
+    list_display = ('data_file', 'status',)
     list_filter = ('status',)
     inlines = [ImportMessageInline]
     actions = [enqueue]

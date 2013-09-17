@@ -11,7 +11,7 @@ from data.models import ImportTask
 class ImportTaskForm(forms.ModelForm):
     class Meta:
         model = ImportTask
-        fields = ('location', 'data_file')
+        fields = ('data_file',)
 
 
 @staff_member_required

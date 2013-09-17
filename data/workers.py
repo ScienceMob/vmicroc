@@ -36,8 +36,7 @@ def import_data_file(import_task_id):
         saved_count = 0
 
         # Now, parse the import task.
-        location = import_task.location
-        sensors = dict((s.sensor_id, s) for s in location.sensors.all())
+        sensors = {}
         with open(os.path.join(settings.MEDIA_ROOT, import_task.data_file.name)) as data_file:
             try:
                 reader = csv.reader(data_file)
@@ -47,7 +46,12 @@ def import_data_file(import_task_id):
                     else:
                         datestr, timestr, sensor_id, raw_reading = parts
                         try:
-                            sensor = sensors[sensor_id]
+                            try:
+                                sensor = sensors[sensor_id]
+                            except KeyError:
+                                sensor = Sensor.objects.get(sensor_id=sensor_id)
+                                sensors[sensor_id] = sensor
+
                             timestamp = datetime.strptime(','.join([datestr, timestr]), '%m/%d/%Y,%H:%M:%S')
                             timestamp = timestamp.replace(tzinfo=ACST)
                             if timestamp < (timezone.now() - timedelta(days=730)):
@@ -60,7 +64,6 @@ def import_data_file(import_task_id):
                                 print "Processing datum for %s" % timestamp
                             try:
                                 Datum.objects.get(
-                                    location=location,
                                     sensor=sensor,
                                     timestamp=timestamp
                                 )
@@ -69,14 +72,14 @@ def import_data_file(import_task_id):
                                 errors.append('Line %s: Multiple existing matches for sensor %s at %s exist in the database' % (n + 1, sensor_id, timestamp))
                             except Datum.DoesNotExist:
                                 Datum.objects.create(
-                                    location=location,
+                                    location=sensor.location,
                                     sensor=sensor,
                                     timestamp=timestamp,
                                     raw_temperature=raw_temperature,
                                     temperature=temperature
                                 )
                             saved_count = saved_count + 1
-                        except KeyError:
+                        except Sensor.DoesNotExist:
                             unknown_sensor_ids.add(sensor_id)
                         except TypeError, e:
                             errors.append("Line %s: Invalid timestamp '%s %s'" % (n + 1, datestr, timestr))
@@ -89,12 +92,10 @@ def import_data_file(import_task_id):
         import_task.save()
 
         # Generate summary statistics for all observed timestamps
-        print sorted(observed_dates)
         for day in sorted(observed_dates):
             print "Summarizing ", day
             for sensor in sensors.values():
                 data = Datum.objects.filter(
-                    location=location,
                     sensor=sensor,
                     timestamp__range=(
                         datetime(year=day.year, month=day.month, day=day.day, hour=0, minute=0, second=0, tzinfo=ACST),
@@ -109,7 +110,6 @@ def import_data_file(import_task_id):
                 if data['min']:
                     try:
                         summary = DaySummary.objects.get(
-                            location=location,
                             sensor=sensor,
                             day=day,
                         )
@@ -120,7 +120,7 @@ def import_data_file(import_task_id):
 
                     except DaySummary.DoesNotExist:
                         summary = DaySummary.objects.create(
-                            location=location,
+                            location=sensor.location,
                             sensor=sensor,
                             day=day,
                             minimum=data['min'],
@@ -129,10 +129,7 @@ def import_data_file(import_task_id):
                         )
 
         for sensor_id in unknown_sensor_ids:
-            try:
-                errors.append('File contains data for unknown sensor %s' % sensor_id)
-            except Sensor.DoesNotExist:
-                warnings.append('File contains data for sensor %s, which is not at %s' % (sensor_id, location))
+            errors.append('File contains data for unknown sensor %s' % sensor_id)
 
         # Report success, but if there are errors/warnings, qualify that success.
         if errors or warnings:

@@ -41,10 +41,6 @@ class DaySummary(models.Model):
         return '%s @ %s' % (self.sensor, self.day)
 
 
-def data_filename(instance, filename):
-    return os.path.join('imports', instance.location.name, filename)
-
-
 class ImportTask(models.Model):
     PENDING = 10
     IMPORTING = 11
@@ -59,13 +55,12 @@ class ImportTask(models.Model):
         (ATTENTION_REQUIRED, 'Attention Required'),
     )
     uploaded = models.DateTimeField(auto_now_add=True)
-    location = models.ForeignKey(Location)
-    data_file = models.FileField(upload_to=data_filename)
+    data_file = models.FileField(upload_to='imports')
 
     status = models.IntegerField(choices=STATUS_CHOICES, default=PENDING)
 
     def __unicode__(self):
-        return 'Import task for %s (%s)' % (self.location, self.get_status_display())
+        return 'Import task %s (%s)' % (self.id, self.get_status_display())
 
     def enqueue(self):
         # Set the status of the task to PENDING
