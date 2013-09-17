@@ -84,7 +84,7 @@ def detail_data(request, location_id):
     # in the row, record it as the last timestamp.
     if current_timestamp and any(row.values()):
         writer.writerow(
-            [current_timestamp.strftime('%Y/%m/%d %H:%M:%S')] +
+            [timezone.localtime(current_timestamp).strftime('%Y/%m/%d %H:%M:%S')] +
             [val for (key, val) in sorted(row.items())]
         )
 
@@ -204,7 +204,7 @@ def export_data(request, location_id):
     # in the row, record it as the last timestamp.
     if current_timestamp and any(row.values()):
         writer.writerow(
-            [current_timestamp.strftime('%Y/%m/%d %H:%M:%S')] +
+            [timezone.localtime(current_timestamp).strftime('%Y/%m/%d %H:%M:%S')] +
             [val for (key, val) in sorted(row.items())]
         )
 
