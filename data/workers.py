@@ -58,7 +58,7 @@ def import_data_file(import_task_id):
                                 raise RTCFailure('File contains timestamps that are > 2 years old; possible RTC failure')
                             observed_dates.add(timestamp.date())
                             raw_temperature = float(raw_reading)
-                            temperature = raw_temperature * sensor.slope + sensor.intercept
+                            temperature = round(raw_temperature * sensor.slope + sensor.intercept, 1)
 
                             if n % 1000 == 1:
                                 print "Processing datum for %s" % timestamp
