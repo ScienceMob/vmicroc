@@ -154,7 +154,7 @@ function initialize() {
       map: map,
     });
 
-  google.maps.event.addListener(marker, 'click', render_location_callback('{{ location.name }}', {{ location.id }}));
+  google.maps.event.addListener(marker, 'click', render_location_callback("{{ location.name|safe }}", {{ location.id }}));
   {% endfor %}
 }
 
