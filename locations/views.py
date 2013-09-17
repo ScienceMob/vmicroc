@@ -126,7 +126,7 @@ def summary_data(request, location_id):
             if row is not None:
                 writer.writerow(
                     [current_day.strftime('%Y/%m/%d')] +
-                    ['%s;%s;%s' % val for (key, val) in sorted(row.items())]
+                    ['%s;%s;%s' % val if val else "null;null;null" for (key, val) in sorted(row.items())]
                 )
 
             # Set up a new empty row
@@ -146,7 +146,7 @@ def summary_data(request, location_id):
     if current_day and any(row.values()):
         writer.writerow(
             [current_day.strftime('%Y/%m/%d')] +
-            ['%s;%s;%s' % val for (key, val) in sorted(row.items())]
+            ['%s;%s;%s' % val if val else "null;null;null" for (key, val) in sorted(row.items())]
         )
 
     return HttpResponse(output.getvalue(), content_type='text/csv')
